@@ -28,12 +28,56 @@ candidate1.electionResults[4] = 38;
 candidate1.electionResults[43] = 11;
 candidate2.electionResults[43] = 27;
 
-
 candidate1.tallyVotes();
 candidate2.tallyVotes();
 
-var winner;
 
+var setStateResults = function(state) {
+    theStates[state].winner = null;
+    if (candidate1.electionResults[state] > candidate2.electionResults[state]) {
+        theStates[state].winner = candidate1;
+    }
+    else if (candidate2.electionResults[state] > candidate1.electionResults[state]) {
+        theStates[state].winner = candidate2;
+    }
+    var stateWinner = theStates[state].winner;
+
+    //Color the state
+    if (stateWinner !== null) {
+        theStates[state].rgbColor = stateWinner.partyColor;
+    }
+    else {
+        theStates[state].rgbColor = [11,32,57];
+    }
+
+    //Populate the state table
+    var stateInfoTable = document.getElementById('stateResults');
+    var header = stateInfoTable.children[0].children[0];
+    var body = stateInfoTable.children[1];
+    var stateName = header.children[0];
+    var stateAbbrev = header.children[1];
+    var candidate1Name = body.children[0].children[0];
+    var candidate1Results = body.children[0].children[1];
+    var candidate2Name = body.children[1].children[0];
+    var candidate2Results = body.children[1].children[1];
+    var winnerName = body.children[2].children[1];
+
+    stateName.innerText = theStates[state].nameFull;
+    stateAbbrev.innerText = theStates[state].nameAbbrev;
+    candidate1Name.innerText = candidate1.name;
+    candidate2Name.innerText = candidate2.name;
+    candidate1Results.innerText = candidate1.electionResults[state];
+    candidate2Results.innerText = candidate2.electionResults[state];
+    
+    if (stateWinner !== null) {
+        winnerName.innerText = stateWinner.name;
+    }
+    else {
+        winnerName.innerText = "tie";
+    };
+}
+
+var winner;
 if (candidate1.totalVotes > candidate2.totalVotes) {
     winner = candidate1.name;
 }
@@ -44,6 +88,15 @@ else {
     winner = "DRAW."
 }
 
-console.log("The winner is " + winner + "!");
 
-console.log(candidate1.partyColor);
+//Populate the top table
+var countryInfoTable = document.getElementById('countryResults');
+var row = countryInfoTable.children[0].children[0];
+row.children[0].innerText = candidate1.name;
+row.children[1].innerText = candidate1.totalVotes;
+row.children[2].innerText = candidate2.name;
+row.children[3].innerText = candidate2.totalVotes;
+row.children[5].innerText = winner;
+
+
+
